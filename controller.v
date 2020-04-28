@@ -252,6 +252,8 @@ module control_unit(
                                 assign ALUOp = `FUNC_ADD;
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 1;
+
+                                assign ImmGenSig = 2'b
                             end
 
                         `ORI_OP:
