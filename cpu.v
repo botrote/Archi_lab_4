@@ -17,4 +17,10 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	// TODO : Implement your multi-cycle CPU!
 
+	initial begin
+		
+	end
+
+	
+
 endmodule
