@@ -29,6 +29,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	reg [1:0] rd;
 	reg [5:0] func;
 	reg [7:0] imm;
+	reg [11:0] target_address;
 
 	// control unit
 	wire PCWriteCond;
@@ -63,7 +64,10 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 
 	// immediate generator
-	//wire [`WORD_SIZE - 1:0] 
+	wire [`WORD_SIZE - 1:0] zero_extended_8_imm, sign_extended_8_imm, sign_extended_target;
+
+	imm_generator immGen(imm, target_address, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
+
 
 	// multiplexer instuction or data memory
 	wire [`WORD_SIZE - 1:0] memory_address;
@@ -79,6 +83,10 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	// multiplexer ALU source B
 	//4_1mux ALUSrcB_MUX(ALUSrcB, ALU_input_2);
+
+	// multiplexer used immediate value
+	wire [`WORD_SIZE - 1:0] used_imm;
+	//4_1mux ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, ImmGenSig, used_imm);
 
 	// multiplexer Write data register index
 	4_1mux MUX4(rs, rt, rd, 16'h0002, RegDst, rd_input);
@@ -112,6 +120,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 			rd = data[7:6];
 			func = data[5:0];
 			imm = data[7:0];
+			target_address = data[11:0];
 		end
 
 endmodule

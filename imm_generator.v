@@ -1,13 +1,44 @@
 `include "opcodes.v"
 
-module ImmGen(data, imm8zero, imm8sign, imm12sign);
-    input [`WORD_SIZE - 1 : 0] data;
-    output [`WORD_SIZE - 1 : 0] imm8zero;
-    output [`WORD_SIZE - 1 : 0] imm8sign;
-    output [`WORD_SIZE - 1 : 0] imm12sign;
+module immediate_generator(
+    imm,
+    target_address,
 
-    assign imm8zero = ((data << 8) >> 8);
-    assign imm8sign = (($signed(data << 8)) >>> 8);
-    assign imm12sign = (($signed(data << 4)) >>> 4);
+    sign_extended_target,
+    sign_extended_8_imm, 
+    zero_extended_8_imm
+);
+
+    input [7:0] imm;
+
+    output reg [`WORD_SIZE - 1 : 0] sign_extended_target, sign_extended_8_imm, zero_extended_8_imm;
+
+    integer i;
+
+    always @(*)
+        begin
+            // sign extend target address
+            sign_extended_target = (target_address | 16'h0000) << 8;
+            for(i = 0; i < 8; i = i + 1)
+                begin
+                    if(sign_extended_target[15] == 1)
+                        sign_extended_target = (sign_extended_target >> 1) + 16'h8000;
+                    else
+                        sign_extended_target = sign_extended_target >> 1; 
+                end
+    
+            // sign extend imm
+            sign_extended_8_imm = (imm | 16'h0000) << 8;
+            for(i = 0; i < 8; i = i + 1)
+                begin
+                    if(sign_extended_8_imm[15] == 1)
+                        sign_extended_8_imm = (sign_extended_8_imm >> 1) + 16'h8000;
+                    else
+                        sign_extended_8_imm = sign_extended_8_imm>> 1; 
+                end
+
+            // zero extend imm
+            zero_extended_8_imm = imm | 16'h0000;
+        end
 
 endmodule
