@@ -16,7 +16,11 @@ module control_unit(
     ALUOp,
     ALUSrcB,
     ALUSrcA,
-    RegWrite
+    RegWrite,
+
+    RegDst,
+    InstFlag,
+    ImmGenSig
 )
 
     input [3:0] opcode;
@@ -34,6 +38,10 @@ module control_unit(
     output [1:0] ALUSrcB;
     output ALUSrcA;
     output RegWrite;
+
+    output [1:0] RegDst;
+    output InstFlag;
+    output [1:0] ImmGenSig;
 
     reg [3:0] stage;
         parameter NON = -1;

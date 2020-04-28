@@ -45,11 +45,12 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
     wire ALUSrcA;
     wire RegWrite;
 
-	// for choosing destination register index
+	// custom signals
 	wire [1:0] RegDst;
 	wire InstFlag;
+	wire [1:0] ImmGenSig
 
-	controller control_unit(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite);
+	controller control_unit(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig);
 
 
 	// registers
