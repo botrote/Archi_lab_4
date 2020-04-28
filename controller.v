@@ -39,7 +39,7 @@ module control_unit(
         parameter ID = 4;
         parameter EX_1 = 5, EX_2 = 6;
         parameter MEM_1 = 7, MEM_2 = 8, MEM_3 = 9, MEM_4 = 10;
-        parameter WB_1 = 11;
+        parameter WB = 11;
 
     initial begin
         assign PCWriteCond = 0;
@@ -61,20 +61,84 @@ module control_unit(
             `IF_1: 
                 begin
                     assign PCWriteCond = 0;
+                    assign PCWrite = 0;
+                    assign IorD = 0;
+                    assign MemRead = 1;
+                    assign MemWrite = 0;
+                    assign MemtoReg = 0;
+                    assign IRWrite = 0;
+                    assign PCSource = 0;
+                    assign ALUOp =                          // not fin
+                    assign ALUSrcB =                        // not fin
+                    assign ALUSrcA =                        // not fin
+                    assign RegWrite = 0;
                 end
 
             `IF_2:
                 begin
+                    assign PCWriteCond = 0;
+                    assign PCWrite = 0;
+                    assign IorD = 0;
+                    assign MemRead = 1;
+                    assign MemWrite = 0;
+                    assign MemtoReg = 0;
+                    assign IRWrite = 0;
+                    assign PCSource = 0;
+                    assign ALUOp =                          // not fin
+                    assign ALUSrcB =                        // not fin
+                    assign ALUSrcA =                        // not fin
 
                 end
 
             `IF_3:
                 begin
-
+                    assign PCWriteCond = 0;
+                    assign PCWrite = 0;
                 end
 
             `IF_4:
                 begin
+
+                end
+
+            `ID:
+                begin
                 
                 end
 
+            `EX_1:
+                begin
+                
+                end
+
+            `EX_2:
+                begin
+                
+                end
+
+            `MEM_1:
+                begin
+                
+                end
+
+            `MEM_2:
+                begin
+                
+                end
+
+            `MEM_3:
+                begin
+                
+                end
+
+            `MEM_4:
+                begin
+                
+                end
+
+            `WB:
+                begin
+                
+                end
+
+        endcase
