@@ -1,10 +1,17 @@
 `include "opcodes.v"
 
-module ALU(op1, op2, funcCode, aResult, bResult);
+module alu( 
+    funcCode,  
+    op1, 
+    op2, 
 
+    aResult, 
+    bResult
+);
+
+    input [3:0] funcCode;
     input [`WORD_SIZE-1:0] op1;
     input [`WORD_SIZE-1:0] op2;
-    input [3:0] funcCode;
 
     output [`WORD_SIZE-1:0] aResult;
     output bResult;
