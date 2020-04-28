@@ -86,10 +86,10 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	2_1mux MemtoReg_MUX(ALU_result, MemtoReg, write_data);
 
 	// multiplexer ALU source A
-	2_1mux ALUSrcA_MUX(data_1, pc, ALUSrcA, ALU_input_1);
+	2_1mux ALUSrcA_MUX(pc, data_1, ALUSrcA, ALU_input_1);
 
 	// multiplexer ALU source B
-	4_1mux ALUSrcB_MUX(ALUSrcB, ALU_input_2);
+	4_1mux ALUSrcB_MUX(data_2, used_imm, 16'h0000, 16'h0001, ALUSrcB, ALU_input_2);
 
 	// multiplexer used immediate value
 	wire [`WORD_SIZE - 1:0] used_imm;

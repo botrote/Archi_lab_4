@@ -64,6 +64,10 @@ module control_unit(
         assign ALUSrcB = 2'b00;
         assign ALUSrcA = 0;
         assign RegWrite = 0;
+
+        assign RegDst = 2'b00;
+        assign InstFlag = 0;
+        assign ImmGenSig = 2'b00;
     end
 
     always @(posedge clk) begin
@@ -82,6 +86,10 @@ module control_unit(
                     assign ALUSrcB =                        // not fin
                     assign ALUSrcA =                        // not fin
                     assign RegWrite = 0;
+
+                    assign RegDst = 2'b00;
+                    assign InstFlag = 1;
+                    assign ImmGenSig = 2'b00;
                 end
 
             `IF_2:
@@ -98,6 +106,9 @@ module control_unit(
                     assign ALUSrcB =                        // not fin
                     assign ALUSrcA =                        // not fin
 
+                    assign RegDst = 2'b00;
+                    assign InstFlag = 0;
+                    assign ImmGenSig = 2'b00;
                 end
 
             `IF_3:
@@ -113,6 +124,9 @@ module control_unit(
                     assign ALUOp = ;                        // not fin
                     assign ALUSrcB = ;                      // not fin
                     assign ALUSrcA = ;                      // not fin
+
+                    assign RegDst = 2'b00;
+                    assign ImmGenSig = 2'b00;
                 end
 
             `IF_4:
@@ -128,6 +142,9 @@ module control_unit(
                     assign ALUOp = ;                        // not fin
                     assign ALUSrcB = ;                      // not fin
                     assign ALUSrcA = ;                      // not fin
+
+                    assign RegDst = 2'b00;
+                    assign ImmGenSig = 2'b01;
                 end
 
             `ID:
@@ -143,6 +160,9 @@ module control_unit(
                     assign ALUOp = ;                        // not fin
                     assign ALUSrcB = ;                      // not fin
                     assign ALUSrcA = ;                      // not fin
+
+                    assign RegDst = 2'b00;
+                    assign ImmGenSig = 2'b00;
                 end
 
             `EX_1:
@@ -155,14 +175,13 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 1;
                     assign PCSource = 0;
-                    assign ALUOp = ;                        // not fin
-                    assign ALUSrcB = ;                      // not fin
-                    assign ALUSrcA = ;                      // not fin
+
+                    assign RegDst = 2'b00;
 
                     if(opcode == `ALU_OP) 
                         begin
-                            assign ALUSrcB = ;
-                            assign ALUSrcA = ;
+                            assign ALUSrcB = 1;
+                            assign ALUSrcA = 2'b00;
 
                             case(func)
                                 `INST_FUNC_ADD: 
