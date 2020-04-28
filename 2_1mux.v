@@ -7,6 +7,8 @@ module MUX2_1 (i1, i2, s, result);
     input s;
 
     output [`WORD_SIZE - 1 : 0] result;
+    
+    wire [`WORD_SIZE - 1:0] result;
 
     assign result = s ? i2 : i1; 
 

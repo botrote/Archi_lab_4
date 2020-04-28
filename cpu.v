@@ -69,6 +69,12 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	imm_generator immGen(imm, target_address, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
 
+	// ALU
+	wire [`WORD_SIZE - 1:0] ALU_input_1, ALU_input_2;
+	wire [`WORD_SIZE - 1:0] ALU_result;
+	wire bcond;
+
+	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
 
 	// multiplexer instuction or data memory
 	wire [`WORD_SIZE - 1:0] memory_address;
@@ -77,28 +83,21 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	2_1mux IorD_MUX(ALU_result, pc, IorD, memory_address);
 
 	// multiplexer register write data
-	//2_1mux MemtoReg_MUX(ALU_result, MemtoReg, write_data);
+	2_1mux MemtoReg_MUX(ALU_result, MemtoReg, write_data);
 
 	// multiplexer ALU source A
-	//2_1mux ALUSrcA_MUX(data_1, pc, ALUSrcA, ALU_input_1);
+	2_1mux ALUSrcA_MUX(data_1, pc, ALUSrcA, ALU_input_1);
 
 	// multiplexer ALU source B
-	//4_1mux ALUSrcB_MUX(ALUSrcB, ALU_input_2);
+	4_1mux ALUSrcB_MUX(ALUSrcB, ALU_input_2);
 
 	// multiplexer used immediate value
 	wire [`WORD_SIZE - 1:0] used_imm;
-	//4_1mux ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, ImmGenSig, used_imm);
+	4_1mux ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, ImmGenSig, used_imm);
 
 	// multiplexer Write data register index
 	4_1mux MUX4(rs, rt, rd, 16'h0002, RegDst, rd_input);
 
-
-	// ALU
-	wire [`WORD_SIZE - 1:0] ALU_input_1, ALU_input_2;
-	wire [`WORD_SIZE - 1:0] ALU_result;
-	wire bcond;
-
-	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
 
 	//assign data = 
 
