@@ -48,7 +48,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	// custom signals
 	wire [1:0] RegDst;
 	wire InstFlag;
-	wire [1:0] ImmGenSig
+	wire [1:0] ImmGenSig;
 
 	controller control_unit(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig);
 
@@ -80,23 +80,23 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	wire [`WORD_SIZE - 1:0] memory_address;
 	assign address = memory_address;
 
-	2_1mux IorD_MUX(ALU_result, pc, IorD, memory_address);
+	MUX2_1 IorD_MUX(ALU_result, pc, IorD, memory_address);
 
 	// multiplexer register write data
-	2_1mux MemtoReg_MUX(ALU_result, MemtoReg, write_data);
+	MUX2_1 MemtoReg_MUX(ALU_result, MemtoReg, write_data);
 
 	// multiplexer ALU source A
-	2_1mux ALUSrcA_MUX(pc, data_1, ALUSrcA, ALU_input_1);
+	MUX2_1 ALUSrcA_MUX(pc, data_1, ALUSrcA, ALU_input_1);
 
 	// multiplexer ALU source B
-	4_1mux ALUSrcB_MUX(data_2, used_imm, 16'h0000, 16'h0001, ALUSrcB, ALU_input_2);
+	wire [`WORD_SIZE - 1:0] used_imm;
+	MUX4_1 ALUSrcB_MUX(data_2, used_imm, 16'h0000, 16'h0001, ALUSrcB, ALU_input_2);
 
 	// multiplexer used immediate value
-	wire [`WORD_SIZE - 1:0] used_imm;
-	4_1mux ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, ImmGenSig, used_imm);
+	MUX4_1 ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, ImmGenSig, used_imm);
 
 	// multiplexer Write data register index
-	4_1mux MUX4(rs, rt, rd, 16'h0002, RegDst, rd_input);
+	MUX4_1 MUX4(rs, rt, rd, 16'h0002, RegDst, rd_input);
 
 
 	//assign data = 
