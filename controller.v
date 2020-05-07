@@ -162,7 +162,7 @@ module control_unit(
                     assign ImmGenSig = 2'b00;
                     assign HLTFlag = 0;
                     assign WWDFlag = 0;
-                    assign ALURegWrite = 0;
+                    assign ALURegWrite = 1;
                     assign MDRWrite = 0;
 
                     assign write_data = 0;
@@ -171,15 +171,15 @@ module control_unit(
             `IF_4:
                 begin
                     assign PCWriteCond = 0;
-                    assign PCWrite = 0;
+                    assign PCWrite = 1;
                     assign IorD = 0;
-                    assign MemRead = 1;
+                    assign MemRead = 0;
                     assign MemWrite = 0;
                     assign MemtoReg = 0;
-                    assign IRWrite = 1;
-                    assign PCSource = 0;
+                    assign IRWrite = 0;
+                    assign PCSource = 1;
                     assign ALUOp = `FUNC_ADD;
-                    assign ALUSrcB = 2'b01;
+                    assign ALUSrcB = 2'b10;
                     assign ALUSrcA = 0;
 
                     assign RegDst = 2'b00;
