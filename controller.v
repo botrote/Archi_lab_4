@@ -226,18 +226,25 @@ module control_unit(
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
                     assign IorD = 0;
-                    assign MemRead = 1;
+                    assign MemRead = 0;
                     assign MemWrite = 0;
                     assign MemtoReg = 0;
-                    assign IRWrite = 1;
-                    assign PCSource = 0;
+                    assign IRWrite = 0;
+                    assign PCSource = 1;
 
                     assign RegDst = 2'b00;
+                    assign InstFlag = 0;
+                    assign ALURegWrite = 0;
+                    assign MDRWrite = 0;
+
+                    assign write_data = 0;
 
                     if(opcode == `ALU_OP) 
                         begin
                             assign ALUSrcB = 1;
                             assign ALUSrcA = 2'b00;
+
+                            assign ImmGenSig = 2'b00;
 
                             case(func)
                                 `INST_FUNC_ADD: 
@@ -298,12 +305,12 @@ module control_unit(
 
                                 `INST_FUNC_WWD:
                                     begin
-                                        assign ;                                    // not fin
+                                        assign WWDFlag = 1;                                    // not fin
                                     end
 
                                 `INST_FUNC_HLT:
                                     begin
-                                        assign ;                                    // not fin
+                                        assign assign HLTFlag = 1;                                    // not fin
                                     end
                             endcase
                         end
@@ -315,7 +322,7 @@ module control_unit(
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 1;
 
-                                assign ImmGenSig = 2'b
+                                assign ImmGenSig = 2'b01;
                             end
 
                         `ORI_OP:
@@ -323,6 +330,8 @@ module control_unit(
                                 assign ALUOp = `FUNC_ORR;
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 1;
+
+                                assign ImmGenSig = 2'b01;
                             end
 
                         `LHI_OP:
@@ -330,6 +339,8 @@ module control_unit(
                                 assign ALUOp = `FUNC_;                  // not fin
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 1;
+
+                                assign ImmGenSig = 2'b01;
                             end
 
                         `LWD_OP:
@@ -337,6 +348,8 @@ module control_unit(
                                 assign ALUOp = `FUNC_ADD;
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 1;
+
+                                assign ImmGenSig = 2'b01;
                             end
 
                         `SWD_OP:
@@ -344,65 +357,79 @@ module control_unit(
                                 assign ALUOp = `FUNC_ADD;
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 1;
+
+                                assign ImmGenSig = 2'b01;
                             end
 
                         `BNE_OP:
                             begin
                                 assign ALUOp = `FUNC_BNE;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2b'00;
                                 assign ALUSrcA = 1;
                             end
 
                         `BEQ_OP:
                             begin
                                 assign ALUOp = `FUNC_BEQ;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2b'00;
                                 assign ALUSrcA = 1;
                             end
 
                         `BGZ_OP:
                             begin
                                 assign ALUOp = `FUNC_BGZ;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2b'11;
                                 assign ALUSrcA = 1;
                             end
 
                         `BLZ_OP:
                             begin
                                 assign ALUOp = `FUNC_BLZ;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2b'11;
                                 assign ALUSrcA = 1;
                             end
 
                         `JMP_OP:
                             begin
+                                assign PCWrite = 0;
+
                                 assign ALUOp = `FUNC_;
                                 assign ALUSrcB = 2b'10;
-                                assign ALUSrcA = 1;
+                                assign ALUSrcA = 0;
+
+                                assign ImmGenSig = 2'b10;
                             end
 
                         `JAL_OP:
                             begin
+                                assign PCWrite = 0;
+
                                 assign ALUOp = `FUNC_ADD;
                                 assign ALUSrcB = 2b'10;
-                                assign ALUSrcA = 1;
+                                assign ALUSrcA = 0;
+
+                                assign ImmGenSig = 2'b10;
                             end
                     endcase
                 end
 
             `EX_2:
                 begin
-                    assign PCWriteCond = 0;
                     assign PCWrite = 0;
-                    assign IorD = 0;
-                    assign MemRead = 1;
-                    assign MemWrite = 0;
-                    assign MemtoReg = 0;
-                    assign IRWrite = 1;
-                    assign PCSource = 0;
-                    assign ALUOp = ;                        // not fin
-                    assign ALUSrcB = ;                      // not fin
-                    assign ALUSrcA = ;                      // not fin
+                    assign WWDFlag = 0;
+
+                    if(opcode == `ADI_OP || opcode == `LHI_OP || opcode == `ORI_OP || opcode == `LWD_OP || opcode == `SWD_OP)
+                        begin
+                            if()
+                                begin
+                                    assign PCSource = 0;
+                                    assign PCWrite = 1;
+                                end
+                        end
+                    else
+                        begin
+                            assign ALURegWrite = 1;
+                        end
                 end
 
             `MEM_1:
