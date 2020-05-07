@@ -110,6 +110,12 @@ module control_unit(
                     assign RegDst = 2'b00;
                     assign InstFlag = 1;
                     assign ImmGenSig = 2'b00;
+                    assign HLTFlag = 0;
+                    assign WWDFlag = 0;
+                    assign ALURegWrite = 0;
+                    assign MDRWrite = 0;
+
+                    assign write_data = 0;
                 end
 
             `IF_2:
@@ -122,13 +128,19 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 0;
                     assign PCSource = 0;
-                    assign ALUOp =                          // not fin
-                    assign ALUSrcB =                        // not fin
-                    assign ALUSrcA =                        // not fin
+                    assign ALUOp = `FUNC_ADD;
+                    assign ALUSrcB = 2'b01;
+                    assign ALUSrcA = 0;
 
                     assign RegDst = 2'b00;
                     assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
+                    assign HLTFlag = 0;
+                    assign WWDFlag = 0;
+                    assign ALURegWrite = 0;
+                    assign MDRWrite = 0;
+
+                    assign write_data = 0;
                 end
 
             `IF_3:
@@ -141,12 +153,19 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 1;
                     assign PCSource = 0;
-                    assign ALUOp = ;                        // not fin
-                    assign ALUSrcB = ;                      // not fin
-                    assign ALUSrcA = ;                      // not fin
+                    assign ALUOp = `FUNC_ADD;   
+                    assign ALUSrcB = 2'b01; 
+                    assign ALUSrcA = 0;
 
                     assign RegDst = 2'b00;
+                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
+                    assign HLTFlag = 0;
+                    assign WWDFlag = 0;
+                    assign ALURegWrite = 0;
+                    assign MDRWrite = 0;
+
+                    assign write_data = 0;
                 end
 
             `IF_4:
@@ -159,12 +178,19 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 1;
                     assign PCSource = 0;
-                    assign ALUOp = ;                        // not fin
-                    assign ALUSrcB = ;                      // not fin
-                    assign ALUSrcA = ;                      // not fin
+                    assign ALUOp = `FUNC_ADD;
+                    assign ALUSrcB = 2'b01;
+                    assign ALUSrcA = 0;
 
                     assign RegDst = 2'b00;
+                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b01;
+                    assign HLTFlag = 0;
+                    assign WWDFlag = 0;
+                    assign ALURegWrite = 0;
+                    assign MDRWrite = 0;
+
+                    assign write_data = 0;
                 end
 
             `ID:
@@ -177,9 +203,9 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 1;
                     assign PCSource = 0;
-                    assign ALUOp = ;                        // not fin
-                    assign ALUSrcB = ;                      // not fin
-                    assign ALUSrcA = ;                      // not fin
+                    assign ALUOp = ;
+                    assign ALUSrcB = ;
+                    assign ALUSrcA = ;
 
                     assign RegDst = 2'b00;
                     assign ImmGenSig = 2'b00;
