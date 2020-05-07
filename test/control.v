@@ -6,6 +6,7 @@ module Control(clk, opcode, func, PCWriteCond, PCWrite, lorD, MemRead, MemWrite,
 	inout clk;
 	input [`WORD_SIZE - 1: 12]opcode;
 	input [5:0]func;
+
 	output PCWriteCond;
 	output PCWrite;
 	output lorD;
@@ -18,14 +19,16 @@ module Control(clk, opcode, func, PCWriteCond, PCWrite, lorD, MemRead, MemWrite,
 	output [1:0]ALUSrcB;
 	output ALUSrcA;
 	output RegWrite;
+
+
 	output isWrite;
-	output [1:0]extendsignal;
+	output [1:0]extendsignal; // ImmGenSig
 	output ALUoutWrite;
 	output MDRWrite;
 	output output_sig;
-	output [1:0]WriteMUX;
-	output instsig;
-	output haltsig;
+	output [1:0]WriteMUX; // RegDst
+	output instsig; // InstFlag
+	output haltsig; // HLTFlag
 
 	reg PCWriteCond;
 	reg PCWrite;

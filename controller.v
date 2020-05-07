@@ -20,7 +20,13 @@ module control_unit(
 
     RegDst,
     InstFlag,
-    ImmGenSig
+    ImmGenSig,
+    HLTFlag,
+    WWDFlag,
+    ALURegWrite,
+    MDRWrite,
+
+    write_data
 )
 
     input [3:0] opcode;
@@ -42,6 +48,12 @@ module control_unit(
     output [1:0] RegDst;
     output InstFlag;
     output [1:0] ImmGenSig;
+    output HLTFlag;
+    output WWDFlag;
+    output ALURegWrite;
+    output MDRWrite;
+
+    output write_data;
 
     reg [3:0] stage;
         parameter NON = -1;
@@ -68,6 +80,14 @@ module control_unit(
         assign RegDst = 2'b00;
         assign InstFlag = 0;
         assign ImmGenSig = 2'b00;
+        assign HLTFlag = 0;
+        assign WWDFlag = 0;
+        assign ALURegWrite = 0;
+        assign MDRWrite = 0;
+
+        write_data = 0;
+
+        stage = NON;
     end
 
     always @(posedge clk) begin
@@ -82,9 +102,9 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 0;
                     assign PCSource = 0;
-                    assign ALUOp =                          // not fin
-                    assign ALUSrcB =                        // not fin
-                    assign ALUSrcA =                        // not fin
+                    assign ALUOp = `FUNC_ADD;
+                    assign ALUSrcB = 2'b01
+                    assign ALUSrcA = 0          
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -163,6 +183,11 @@ module control_unit(
 
                     assign RegDst = 2'b00;
                     assign ImmGenSig = 2'b00;
+
+                    if(opcode)
+                        begin
+                            assign;
+                        end
                 end
 
             `EX_1:
@@ -217,21 +242,27 @@ module control_unit(
                                 `INST_FUNC_SHL:
                                     begin
                                         assign ALUOp = `FUNC_SHL;
+                                        assign ALUSrcB = 2'b01;
                                     end
 
                                 `INST_FUNC_SHR:
                                     begin
                                         assign ALUOp = `FUNC_SHR;
+                                        assign ALUSrcB = 2'b01;
                                     end
 
                                 `INST_FUNC_JPR:
                                     begin
                                         assign ALUOp = `FUNC_ADD;
+                                        assign ALUSrcB = 2'b11;
+                                        assign ALUSrcA = 1;
                                     end
 
                                 `INST_FUNC_JRL:
                                     begin
                                         assign ALUOp = `FUNC_ADD;
+                                        assign ALUSrcB = 2'b11;
+                                        assign ALUSrcA = 1;
                                     end
 
                                 `INST_FUNC_WWD:
