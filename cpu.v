@@ -21,6 +21,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	wire is_halted;
 
 	reg [`WORD_SIZE - 1:0] pc;
+	wire [`WORD_SIZE - 1:0] newPC;
 
 	// instruction sub parts
 	reg [3:0] opcode;
@@ -53,7 +54,6 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	wire ALURegWrite;
 	wire MDRWrite;
 	wire write_data;
-	controller control_unit(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data);
 
 	// registers
 	reg [`WORD_SIZE - 1:0] ALUReg;
@@ -64,39 +64,33 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	wire [`WORD_SIZE - 1:0] data_1, data_2;
 	assign rs_input = rs;
 	assign rt_input = rt;
-	reg_manager Registers(rs_input, rt_input, rd_input, reg_write_data, RegWrite, data_1, data_2); // 따로 새로운 wire을 만들 이유가?
 
 	// immediate generator
 	wire [`WORD_SIZE - 1:0] zero_extended_8_imm, sign_extended_8_imm, sign_extended_target;
-	imm_generator immGen(imm, target_address, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
 
 	// ALU
 	wire [`WORD_SIZE - 1:0] ALU_input_1, ALU_input_2;
 	wire [`WORD_SIZE - 1:0] ALU_result;
 	wire bcond;
-	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
 
 	// multiplexer instuction or data memory
 	wire [`WORD_SIZE - 1:0] memory_address;
 	assign address = memory_address;
-	MUX2_1 IorD_MUX(ALU_result, pc, IorD, memory_address);
-
-	// multiplexer register write data
-	MUX2_1 MemtoReg_MUX(ALU_result, MemtoReg, reg_write_data);
-
-	// multiplexer ALU source A
-	MUX2_1 ALUSrcA_MUX(pc, data_1, ALUSrcA, ALU_input_1);
 
 	// multiplexer ALU source B
 	wire [`WORD_SIZE - 1:0] used_imm;
-	MUX4_1 ALUSrcB_MUX(data_2, used_imm, 16'h0000, 16'h0001, ALUSrcB, ALU_input_2);
 
-	// multiplexer used immediate value
-	MUX4_1 ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, ImmGenSig, used_imm);
-
-	// multiplexer Write data register index
-	MUX4_1 MUX4(rs, rt, rd, 16'h0002, RegDst, rd_input);
-
+	controller control_unit(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data);
+	reg_manager Registers(rs_input, rt_input, rd_input, reg_write_data, RegWrite, data_1, data_2);
+	imm_generator immGen(imm, target_address, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
+	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
+	MUX2_1 PCSource_MUX(ALU_result, ALUReg, PCSource, newPC); // fin
+	MUX2_1 IorD_MUX(pc, ALUReg, IorD, memory_address); // fin
+	MUX2_1 MemtoReg_MUX(ALUReg, MDR, MemtoReg, reg_write_data); //fin
+	MUX2_1 ALUSrcA_MUX(pc, data_1, ALUSrcA, ALU_input_1); // fin
+	MUX4_1 ALUSrcB_MUX(data_2, 16'h0001, used_imm, 16'h0000, ALUSrcB, ALU_input_2); // fin
+	MUX4_1 ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, 16'h0000, ImmGenSig, used_imm); // fin
+	MUX4_1 RegDst_MUX4(rs, rt, rd, 16'h0002, RegDst, rd_input); // fin
 
 	assign data = write_data ? : `WORD_SIZE'bz;
 
@@ -105,9 +99,9 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 		num_inst = 0;
 	end
 
-	always @()
+	always @(posedge (PCWrite || (PCWriteCond && bcond)))
 		begin
-			pc = 
+			pc = newPC;
 		end
 
 	always @(posedge InstFlag)
@@ -117,7 +111,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	always @(posedge WWDFlag)
 		begin
-			output_port = ;
+			output_port = data_1;
 		end
 
 	assign is_halted = HLTFlag;
