@@ -21,11 +21,11 @@ module Control(clk, opcode, func, PCWriteCond, PCWrite, lorD, MemRead, MemWrite,
 	output RegWrite;
 
 
-	output isWrite;
+	output isWrite; // write_data
 	output [1:0]extendsignal; // ImmGenSig
-	output ALUoutWrite;
-	output MDRWrite;
-	output output_sig;
+	output ALUoutWrite; // ALURegWrite
+	output MDRWrite; // MDRWrite
+	output output_sig; // WWDFlag
 	output [1:0]WriteMUX; // RegDst
 	output instsig; // InstFlag
 	output haltsig; // HLTFlag
