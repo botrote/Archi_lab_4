@@ -198,22 +198,27 @@ module control_unit(
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
                     assign IorD = 0;
-                    assign MemRead = 1;
+                    assign MemRead = 0;
                     assign MemWrite = 0;
                     assign MemtoReg = 0;
-                    assign IRWrite = 1;
-                    assign PCSource = 0;
-                    assign ALUOp = ;
-                    assign ALUSrcB = ;
-                    assign ALUSrcA = ;
+                    assign IRWrite = 0;
+                    assign PCSource = 1;
+                    assign ALUOp = `FUNC_ADD;
+                    assign ALUSrcB = 2'b10;
+                    assign ALUSrcA = 0;
 
                     assign RegDst = 2'b00;
                     assign ImmGenSig = 2'b00;
-
-                    if(opcode)
+                    assign InstFlag = 0;
+                    assign HLTFlag = 0;
+                    assign WWDFlag = 0;
+                    if(opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP || opcode == `BNE_OP)
                         begin
-                            assign;
+                            assign ALURegWrite = 1;
                         end
+                    assign MDRWrite = 0;
+
+                    assign write_data = 0;
                 end
 
             `EX_1:
