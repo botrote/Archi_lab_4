@@ -15,11 +15,14 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	output [`WORD_SIZE-1:0] output_port;	// this will be used for a "WWD" instruction
 	output is_halted;
 
+	wire readM;
+	wire writeM;
 	wire [`WORD_SIZE - 1:0] address;
 	reg [`WORD_SIZE - 1:0] num_inst;
 	reg [`WORD_SIZE - 1:0] output_port;
 	wire is_halted;
 
+	//PC
 	reg [`WORD_SIZE - 1:0] pc;
 	wire [`WORD_SIZE - 1:0] newPC;
 
@@ -59,7 +62,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	reg [`WORD_SIZE - 1:0] ALUReg;
 	reg [`WORD_SIZE - 1:0] MDR;
 
-	wire [1:0] rs_input, rt_input, rd_input;
+	wire [1:0] rs_input, rt_input, rd_index;
 	wire [`WORD_SIZE - 1:0] reg_write_data;
 	wire [`WORD_SIZE - 1:0] data_1, data_2;
 	assign rs_input = rs;
@@ -75,13 +78,12 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	// multiplexer instuction or data memory
 	wire [`WORD_SIZE - 1:0] memory_address;
-	assign address = memory_address;
 
 	// multiplexer ALU source B
 	wire [`WORD_SIZE - 1:0] used_imm;
 
 	controller control_unit(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data);
-	reg_manager Registers(rs_input, rt_input, rd_input, reg_write_data, RegWrite, data_1, data_2);
+	reg_manager Registers(rs_input, rt_input, rd_index, reg_write_data, RegWrite, data_1, data_2);
 	imm_generator immGen(imm, target_address, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
 	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
 	MUX2_1 PCSource_MUX(ALU_result, ALUReg, PCSource, newPC); // fin
@@ -90,8 +92,12 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	MUX2_1 ALUSrcA_MUX(pc, data_1, ALUSrcA, ALU_input_1); // fin
 	MUX4_1 ALUSrcB_MUX(data_2, 16'h0001, used_imm, 16'h0000, ALUSrcB, ALU_input_2); // fin
 	MUX4_1 ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, 16'h0000, ImmGenSig, used_imm); // fin
-	MUX4_1 RegDst_MUX4(rs, rt, rd, 16'h0002, RegDst, rd_input); // fin
+	MUX4_1 RegDst_MUX4(rs, rt, rd, 16'h0002, RegDst, rd_index); // fin
 
+
+	assign readM = MemRead;
+	assign writeM = MemWrite;
+	assign address = memory_address;
 	assign data = write_data ? : `WORD_SIZE'bz;
 
 	initial begin
@@ -99,7 +105,9 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 		num_inst = 0;
 	end
 
-	always @(posedge (PCWrite || (PCWriteCond && bcond)))
+	wire pcChangeCond;
+	assign pcChangeCond = PCWrite || (PCWriteCond && bcond);
+	always @(posedge pcChangeCond)
 		begin
 			pc = newPC;
 		end
