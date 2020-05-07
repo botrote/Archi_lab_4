@@ -559,28 +559,56 @@ module control_unit(
                     assign MDRWrite = 0;
 
                     assign write_data = 0;
+
+                    if (opcode==`BNE_OP || opcode==`BEQ_OP || opcode==`BGZ_OP || opcode==`BLZ_OP|| opcode==`JMP_OP || opcode == `SWD_OP)
+                        begin
+                        end
+                    else if(opcode==`ADI_OP || opcode==`ORI_OP || opcode==`LHI_OP)
+                        begin
+                            assign RegWrite = 1;
+                            assign RegDst = 2'b01;
+                        end
+                    else if(opcode == `JAL_OP)
+                        begin
+                            assign RegWrite = 1;
+                            assign RegDst = 2'b11;
+                        end
+                    else if(opcode == `LWD_OP)
+                        begin
+                            assign MemtoReg = 1;
+                            assign RegWrite = 1;
+                            assign RegDst = 2'b01;
+                        end
+                    else
+                        begin
+                            if(func == `INST_FUNC_JPR || func == `INST_FUNC_WWD || func == `INST_FUNC_HLT)
+                                begin
+                                end
+                            else if(func == `INST_FUNC_JRL)
+                                begin
+                                    assign RegWrite = 1;
+                                    assign RegDst = 2'b11;
+                                end
+                            else
+                                begin
+                                    assign RegWrite = 1;
+                                    assign RegDst = 2'b10;
+                                end
+                        end
                 end
         endcase
 
 
         // update stage
-        if(stage == `IF_4 && opcode == `JAL_OP)
+        if(stage == `IF_4 && opcode == `JMP_OP)
             begin
                 stage = `EX_1;
-            end
-        else if(stage == `EX_2 && (opcode == `LWD_OP || opcode == `SWD_OP))
-            begin
-                stage = `MEM_1;
             end
         else if(stage == `EX_2 && (opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP || opcode == `BNE_OP))
             begin
                 stage = `IF_1;
             end
         else if(stage == `EX_2 && opcode == `ALU_OP || opcode == `ADI_OP || opcode == `ORI_OP || opcode == `LHI_OP || opcode == `JAL_OP) // see if it's all
-            begin
-                stage = `WB;
-            end
-        else if(stage == `MEM_4 && opcode == `LWD_OP)
             begin
                 stage = `WB;
             end
