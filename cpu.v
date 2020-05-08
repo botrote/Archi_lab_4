@@ -82,9 +82,9 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	// multiplexer ALU source B
 	wire [`WORD_SIZE - 1:0] used_imm;
 
-	controller control_unit(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data);
-	reg_manager Registers(rs_input, rt_input, RegWrite, rd_index, reg_write_data, data_1, data_2);
-	imm_generator immGen(imm, target_address, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
+	control_unit control_unit1(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data);
+	Reg_Manager Registers(rs_input, rt_input, RegWrite, rd_index, reg_write_data, data_1, data_2);
+	immediate_generator immGen(imm, target_address, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
 	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
 	MUX2_1 PCSource_MUX(ALU_result, ALUReg, PCSource, newPC); // fin
 	MUX2_1 IorD_MUX(pc, ALUReg, IorD, memory_address); // fin
