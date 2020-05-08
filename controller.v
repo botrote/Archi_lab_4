@@ -360,7 +360,7 @@ module control_unit(
 
                         `LHI_OP:
                             begin
-                                assign ALUOp = `FUNC_ADD;                  // not fin
+                                assign ALUOp = `FUNC_LHI;                  // not fin
                                 assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 1;
 

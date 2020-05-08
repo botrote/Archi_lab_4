@@ -39,6 +39,12 @@ module alu(
         `FUNC_BEQ : assign bResult = ((op1 == op2) ? 1 : 0);
         `FUNC_BGZ : assign bResult = ((op1 > 0) ? 1 : 0);
         `FUNC_BLZ : assign bResult = ((op1 < 0) ? 1 : 0);
+
+
+        `FUNC_LHI:
+            begin
+                assign aResult = op2 << 8;
+            end
         endcase
     end
 

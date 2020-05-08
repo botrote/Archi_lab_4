@@ -31,6 +31,9 @@
 `define FUNC_BLZ    4'b1010
 `define FUNC_BGZ    4'b1011
 
+// more additional function codes for ALU
+`define FUNC_LHI    4'b1100
+
 // ALU instruction function codes
 `define INST_FUNC_ADD 6'd0
 `define INST_FUNC_SUB 6'd1
