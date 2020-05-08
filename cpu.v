@@ -115,9 +115,6 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	always @(posedge InstFlag)
 		begin
 			num_inst = num_inst + 1;
-
-			$display("opcode %d", opcode);
-			$display("func %d", func);
 		end
 
 	always @(posedge WWDFlag)
@@ -138,6 +135,8 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 			func = data[5:0];
 			imm = data[7:0];
 			target_address = data[11:0];
+
+			$display("opcode: %d rs: %d rt: %d rd: %d func: %d imm: %d target: %d", opcode, rs, rt, rd, func, imm, target_address);
 		end
 
 	always @(posedge ALURegWrite)

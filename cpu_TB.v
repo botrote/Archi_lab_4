@@ -142,7 +142,7 @@ module cpu_TB();
 			if (TestPassed[i] == 1)
 				begin
 					Passed = Passed + 1;
-					$display("Test #%s : %s", TestID[i], "Passed");
+					$display("Test #%s : %s (Ans : 0x%0x)", TestID[i], "Passed", TestAns[i]);
 				end
 			else									   
 				$display("Test #%s : %s", TestID[i], (TestPassed[i] === 0)?"Wrong" : "No Result");

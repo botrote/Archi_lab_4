@@ -27,9 +27,20 @@ module alu(
     always @(*) begin
 
         case(funcCode) 
-        `FUNC_ADD : assign aResult = op1 + op2;
-        `FUNC_SUB : assign aResult = op1 - op2;
-        `FUNC_AND : assign aResult = op1 & op2;
+        `FUNC_ADD : 
+		begin
+			assign aResult = op1 + op2;
+			$display("op1: %d + op2: %d = aResult: %d", op1, op2, aResult);
+		end
+        `FUNC_SUB : 
+		begin
+			assign aResult = op1 - op2;
+			$display("op1: %d - op2: %d = aResult: %d", op1, op2, aResult);
+		end
+        `FUNC_AND : 
+		begin
+			assign aResult = op1 & op2;
+		end
         `FUNC_ORR : assign aResult = op1 | op2;
         `FUNC_NOT : assign aResult = ~op1;
         `FUNC_TCP : assign aResult = ~op1 + 1;
