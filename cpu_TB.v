@@ -111,6 +111,8 @@ module cpu_TB();
 				if (num_inst == TestNumInst[i]) begin
 					if (output_port == TestAns[i]) begin
 						TestPassed[i] = 1'b1;
+						$display("Test #%s passed!", TestID[i]);
+						$display("output_port = 0x%0x (Ans : 0x%0x)", output_port, TestAns[i]);
 					end
 					else begin
 						TestPassed[i] = 1'b0;
