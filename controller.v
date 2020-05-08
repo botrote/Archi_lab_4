@@ -88,28 +88,28 @@ module control_unit(
         parameter WB = 11;
 
     initial begin
-        assign PCWriteCond = 0;
-        assign PCWrite = 0;
-        assign IorD = 0;
-        assign MemRead = 0;
-        assign MemWrite = 0;
-        assign MemtoReg = 0;
-        assign IRWrite = 0;
-        assign PCSource = 0;
-        assign ALUOp = 0;
-        assign ALUSrcB = 2'b00;
-        assign ALUSrcA = 0;
-        assign RegWrite = 0;
+        assign PCWriteCond = 0;     // checked
+        assign PCWrite = 0;         // checked
+        assign IorD = 0;            // checked
+        assign MemRead = 0;         // checked
+        assign MemWrite = 0;        // checked
+        assign MemtoReg = 0;        // checked --> recheck?
+        assign IRWrite = 0;         // checked
+        assign PCSource = 0;        // checked
+        assign ALUOp = 0;           // checked
+        assign ALUSrcB = 2'b00;     // checked
+        assign ALUSrcA = 0;         // checked
+        assign RegWrite = 0;        // checked
 
-        assign RegDst = 2'b00;
-        assign InstFlag = 0;
-        assign ImmGenSig = 2'b00;
-        assign HLTFlag = 0;
-        assign WWDFlag = 0;
-        assign ALURegWrite = 0;
-        assign MDRWrite = 0;
+        assign RegDst = 2'b00;      // checked
+        assign InstFlag = 0;        // checked
+        assign ImmGenSig = 2'b00;   // checked
+        assign HLTFlag = 0;         // checked
+        assign WWDFlag = 0;         // checked
+        assign ALURegWrite = 0;     // checked
+        assign MDRWrite = 0;        // checked
 
-        write_data = 0;
+        write_data = 0;             // checked
 
         stage = NON;
     end
@@ -134,10 +134,7 @@ module control_unit(
                     assign RegDst = 2'b00;
                     assign InstFlag = 1;
                     assign ImmGenSig = 2'b00;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 0;
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
                 end
@@ -155,14 +152,12 @@ module control_unit(
                     assign ALUOp = `FUNC_ADD;
                     assign ALUSrcB = 2'b01;
                     assign ALUSrcA = 0;
+                    assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
                     assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 0;
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
                 end
@@ -180,14 +175,11 @@ module control_unit(
                     assign ALUOp = `FUNC_ADD;   
                     assign ALUSrcB = 2'b01; 
                     assign ALUSrcA = 0;
+                    assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
-                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 1;
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
                 end
@@ -205,14 +197,11 @@ module control_unit(
                     assign ALUOp = `FUNC_ADD;
                     assign ALUSrcB = 2'b10;
                     assign ALUSrcA = 0;
+                    assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
-                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b01;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 0;
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
                 end
@@ -227,20 +216,18 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 0;
                     assign PCSource = 1;
-                    assign ALUOp = `FUNC_ADD;
                     assign ALUSrcB = 2'b10;
                     assign ALUSrcA = 0;
+                    assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
                     assign ImmGenSig = 2'b00;
-                    assign InstFlag = 0;
                     assign HLTFlag = 0;
-                    assign WWDFlag = 0;
+                    assign ALURegWrite = 0;
                     if(opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP || opcode == `BNE_OP)
                         begin
                             assign ALURegWrite = 1;
                         end
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
                 end
@@ -248,27 +235,23 @@ module control_unit(
             EX_1:
                 begin
                     assign PCWriteCond = 0;
-                    assign PCWrite = 0;
                     assign IorD = 0;
                     assign MemRead = 0;
                     assign MemWrite = 0;
                     assign MemtoReg = 0;
                     assign IRWrite = 0;
                     assign PCSource = 1;
+                    assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
-                    assign InstFlag = 0;
                     assign ALURegWrite = 0;
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
 
                     if(opcode == `ALU_OP) 
                         begin
-                            assign ALUSrcB = 1;
-                            assign ALUSrcA = 2'b00;
-
-                            assign ImmGenSig = 2'b00;
+                            assign ALUSrcB = 2'b00;
+                            assign ALUSrcA = 1;
 
                             case(func)
                                 `INST_FUNC_ADD: 
@@ -417,7 +400,7 @@ module control_unit(
                             begin
                                 assign PCWrite = 0;
 
-                                assign ALUOp = `FUNC_ADD;
+                                assign ALUOp = `FUNC_ADD; // needs change
                                 assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 0;
 
@@ -428,7 +411,7 @@ module control_unit(
                             begin
                                 assign PCWrite = 0;
 
-                                assign ALUOp = `FUNC_ADD;
+                                assign ALUOp = `FUNC_ADD; // needs change
                                 assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 0;
 
@@ -470,24 +453,20 @@ module control_unit(
             MEM_1:
                 begin
                     assign PCWriteCond = 0;
-                    assign PCWrite = 0;
                     assign IorD = 1;
                     assign MemRead = 0;
                     assign MemWrite = 0;
                     assign MemtoReg = 0;
                     assign IRWrite = 0;
                     assign PCSource = 0;
-                    assign ALUOp = `FUNC_ADD;
+                    assign ALUOp = 0;
                     assign ALUSrcB = 2'b00;
                     assign ALUSrcA = 0;
+                    assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
-                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 0;
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
 
@@ -505,26 +484,17 @@ module control_unit(
             MEM_2:
                 begin
                     assign PCWriteCond = 0;
-                    assign PCWrite = 0;
                     assign IorD = 1;
-                    assign MemRead = 0;
-                    assign MemWrite = 0;
                     assign MemtoReg = 0;
                     assign IRWrite = 0;
                     assign PCSource = 0;
-                    assign ALUOp = `FUNC_ADD;
+                    assign ALUOp = 0;
                     assign ALUSrcB = 2'b00;
                     assign ALUSrcA = 0;
+                    assign RegWrite = 0;
 
-                    assign RegDst = 2'b00;
-                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 0;
-                    assign MDRWrite = 0;
-
-                    assign write_data = 0;
 
                     if(opcode == `LWD_OP)
                         begin
@@ -544,22 +514,18 @@ module control_unit(
             MEM_4:
                 begin
                     assign PCWriteCond = 0;
-                    assign PCWrite = 0;
                     assign IorD = 0;
-                    assign MemRead = 1;
+                    assign MemRead = 0;
                     assign MemWrite = 0;
                     assign MemtoReg = 0;
-                    assign IRWrite = 1;
+                    assign IRWrite = 0;
                     assign PCSource = 0;
-                    assign ALUOp = `FUNC_ADD;                        // not fin
+                    assign ALUOp = 0;                        // not fin
                     assign ALUSrcB = 2'b00;                      // not fin
                     assign ALUSrcA = 0;
+                    assign RegWrite = 0;
 
-                    assign RegDst = 2'b00;
-                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 0;
                     assign MDRWrite = 0;
 
@@ -576,17 +542,13 @@ module control_unit(
                     assign MemtoReg = 0;
                     assign IRWrite = 0;
                     assign PCSource = 0;
-                    assign ALUOp = `FUNC_ADD;                        // not fin
+                    assign ALUOp = 0;                        // not fin
                     assign ALUSrcB = 2'b00;                      // not fin
                     assign ALUSrcA = 0;                      // not fin
+                    assign RegWrite = 0;
 
-                    assign RegDst = 2'b00;
-                    assign InstFlag = 0;
                     assign ImmGenSig = 2'b00;
-                    assign HLTFlag = 0;
-                    assign WWDFlag = 0;
                     assign ALURegWrite = 0;
-                    assign MDRWrite = 0;
 
                     assign write_data = 0;
 

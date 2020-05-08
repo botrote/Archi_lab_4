@@ -102,7 +102,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	initial begin
 		pc = 16'h0000;
-		num_inst = 0;
+		num_inst = -1;
 	end
 
 	wire pcChangeCond;
