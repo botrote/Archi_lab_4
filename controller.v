@@ -336,7 +336,7 @@ module control_unit(
 
                         `LHI_OP:
                             begin
-                                assign ALUOp = `FUNC_;                  // not fin
+                                assign ALUOp = `FUNC_ADD                  // not fin
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 1;
 
@@ -393,7 +393,7 @@ module control_unit(
                             begin
                                 assign PCWrite = 0;
 
-                                assign ALUOp = `FUNC_;
+                                assign ALUOp = `FUNC_ADD;
                                 assign ALUSrcB = 2b'10;
                                 assign ALUSrcA = 0;
 
@@ -418,9 +418,9 @@ module control_unit(
                     assign PCWrite = 0;
                     assign WWDFlag = 0;
 
-                    if(opcode == `ADI_OP || opcode == `LHI_OP || opcode == `ORI_OP || opcode == `LWD_OP || opcode == `SWD_OP)
+                    if(opcode == `ALU_OP || opcode == `ADI_OP || opcode == `LHI_OP || opcode == `ORI_OP || opcode == `LWD_OP || opcode == `SWD_OP)
                         begin
-                            if()
+                            if(opcode == `ALU_OP && (func == `INST_FUNC_JPR || func == `INST_FUNC_JRL))
                                 begin
                                     assign PCSource = 0;
                                     assign PCWrite = 1;
@@ -431,9 +431,15 @@ module control_unit(
                                     assign ALURegWrite = 1;
                                 end
                         end
-                    else if(opcode == `BEQ_OP ||)
+                    else if(opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BNE_OP || opcode == `BLZ_OP)
                         begin
-
+                            assign PCSource = 1;
+                            assign PCWriteCond = 1;
+                        end
+                    else if(opcode == `JMP_OP || opcode == `JAL_OP)
+                        begin
+                            assign PCSource = 0;
+                            assign PCWrite = 1;
                         end
                 end
 
@@ -608,7 +614,7 @@ module control_unit(
             begin
                 stage = `IF_1;
             end
-        else if(stage == `EX_2 && opcode == `ALU_OP || opcode == `ADI_OP || opcode == `ORI_OP || opcode == `LHI_OP || opcode == `JAL_OP) // see if it's all
+        else if(stage == `EX_2 && opcode == `ALU_OP || opcode == `ADI_OP || opcode == `ORI_OP || opcode == LHI || opcode == `JMP_OP || opcode == `JAL_OP) // see if it's all
             begin
                 stage = `WB;
             end
