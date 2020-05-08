@@ -115,11 +115,14 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	always @(posedge InstFlag)
 		begin
 			num_inst = num_inst + 1;
+			$display("opcode %d", opcode);
 		end
 
 	always @(posedge WWDFlag)
 		begin
 			output_port = data_1;
+
+			$display("output_port %d", output_port);
 		end
 
 	assign is_halted = HLTFlag;

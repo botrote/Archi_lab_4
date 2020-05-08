@@ -140,8 +140,10 @@ module cpu_TB();
 		$display("The testbench is finished. Summarizing...");
 		for(i=0; i<`NUM_TEST; i=i+1) begin
 			if (TestPassed[i] == 1)
-				Passed = Passed + 1;
-				$display("Test #%s : %s", TestID[i], "Passed");
+				begin
+					Passed = Passed + 1;
+					$display("Test #%s : %s", TestID[i], "Passed");
+				end
 			else									   
 				$display("Test #%s : %s", TestID[i], (TestPassed[i] === 0)?"Wrong" : "No Result");
 		end
