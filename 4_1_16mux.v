@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module MUX4_1 (i1, i2, i3, i4, s, result);
+module MUX4_1_16 (i1, i2, i3, i4, s, result);
 
     input [`WORD_SIZE - 1 : 0] i1;
     input [`WORD_SIZE - 1 : 0] i2;

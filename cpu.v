@@ -90,9 +90,9 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	MUX2_1 IorD_MUX(pc, ALUReg, IorD, memory_address); // fin
 	MUX2_1 MemtoReg_MUX(ALUReg, MDR, MemtoReg, reg_write_data); //fin
 	MUX2_1 ALUSrcA_MUX(pc, data_1, ALUSrcA, ALU_input_1); // fin
-	MUX4_1 ALUSrcB_MUX(data_2, 16'h0001, used_imm, 16'h0000, ALUSrcB, ALU_input_2); // fin
-	MUX4_1 ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, 16'h0000, ImmGenSig, used_imm); // fin
-	MUX4_1 RegDst_MUX4(rs, rt, rd, 16'h0002, RegDst, rd_index); // fin
+	MUX4_1_16 ALUSrcB_MUX(data_2, 16'h0001, used_imm, 16'h0000, ALUSrcB, ALU_input_2); // fin
+	MUX4_1_16 ImmGenSig_MUX(zero_extended_8_imm, sign_extended_8_imm, sign_extended_target, 16'h0000, ImmGenSig, used_imm); // fin
+	MUX4_1_2 RegDst_MUX4(rs, rt, rd, 2'b10, RegDst, rd_index); // fin
 
 
 	assign readM = MemRead;

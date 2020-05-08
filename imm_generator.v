@@ -10,7 +10,7 @@ module immediate_generator(
 );
 
     input [7:0] imm;
-    input [`WORD_SIZE - 1 : 0] target_address;
+    input [11:0] target_address;
 
     output reg [`WORD_SIZE - 1 : 0] sign_extended_target, sign_extended_8_imm, zero_extended_8_imm;
 
