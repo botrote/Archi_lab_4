@@ -69,7 +69,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	assign rt_input = rt;
 
 	// immediate generator
-	reg [`WORD_SIZE] immgen_input;
+	reg [`WORD_SIZE - 1:0] immgen_input;
 	wire [`WORD_SIZE - 1:0] zero_extended_8_imm, sign_extended_8_imm, sign_extended_target;
 
 	// ALU
@@ -142,8 +142,6 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	always @(posedge ALURegWrite)
 		begin
 			ALUReg = ALU_result;
-			$display("%d op %d = %d", ALU_input1, ALU_input2, ALU_result);
-			$display("ALU result: %d", ALU_result);
 		end
 
 	always @(posedge MDRWrite)
