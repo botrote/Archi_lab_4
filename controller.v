@@ -1,4 +1,4 @@
-`include "opcode.v"
+`include "opcodes.v"
 
 module control_unit(
     clk,
@@ -27,8 +27,9 @@ module control_unit(
     MDRWrite,
 
     write_data
-)
+);
 
+    input clk;
     input [3:0] opcode;
     input [5:0] func;
 
@@ -54,6 +55,29 @@ module control_unit(
     output MDRWrite;
 
     output write_data;
+
+    reg PCWriteCond;
+    reg PCWrite;
+    reg IorD;
+    reg MemRead;
+    reg MemWrite;
+    reg MemtoReg;
+    reg IRWrite;
+    reg PCSource;
+    reg [3:0] ALUOp;
+    reg [1:0] ALUSrcB;
+    reg ALUSrcA;
+    reg RegWrite;
+
+    reg [1:0] RegDst;
+    reg InstFlag;
+    reg [1:0] ImmGenSig;
+    reg HLTFlag;
+    reg WWDFlag;
+    reg ALURegWrite;
+    reg MDRWrite;
+
+    reg write_data;
 
     reg [3:0] stage;
         parameter NON = -1;
@@ -92,7 +116,7 @@ module control_unit(
 
     always @(posedge clk) begin
         case(stage)
-            `IF_1: 
+            IF_1: 
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -103,8 +127,8 @@ module control_unit(
                     assign IRWrite = 0;
                     assign PCSource = 0;
                     assign ALUOp = `FUNC_ADD;
-                    assign ALUSrcB = 2'b01
-                    assign ALUSrcA = 0          
+                    assign ALUSrcB = 2'b01;
+                    assign ALUSrcA = 0;          
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -118,7 +142,7 @@ module control_unit(
                     assign write_data = 0;
                 end
 
-            `IF_2:
+            IF_2:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -143,7 +167,7 @@ module control_unit(
                     assign write_data = 0;
                 end
 
-            `IF_3:
+            IF_3:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -168,7 +192,7 @@ module control_unit(
                     assign write_data = 0;
                 end
 
-            `IF_4:
+            IF_4:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 1;
@@ -193,7 +217,7 @@ module control_unit(
                     assign write_data = 0;
                 end
 
-            `ID:
+            ID:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -221,7 +245,7 @@ module control_unit(
                     assign write_data = 0;
                 end
 
-            `EX_1:
+            EX_1:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -310,7 +334,7 @@ module control_unit(
 
                                 `INST_FUNC_HLT:
                                     begin
-                                        assign assign HLTFlag = 1;                                    // not fin
+                                        assign HLTFlag = 1;                                    // not fin
                                     end
                             endcase
                         end
@@ -319,7 +343,7 @@ module control_unit(
                         `ADI_OP:
                             begin
                                 assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 1;
 
                                 assign ImmGenSig = 2'b01;
@@ -328,7 +352,7 @@ module control_unit(
                         `ORI_OP:
                             begin
                                 assign ALUOp = `FUNC_ORR;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 1;
 
                                 assign ImmGenSig = 2'b01;
@@ -336,8 +360,8 @@ module control_unit(
 
                         `LHI_OP:
                             begin
-                                assign ALUOp = `FUNC_ADD                  // not fin
-                                assign ALUSrcB = 2b'10;
+                                assign ALUOp = `FUNC_ADD;                  // not fin
+                                assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 1;
 
                                 assign ImmGenSig = 2'b01;
@@ -346,7 +370,7 @@ module control_unit(
                         `LWD_OP:
                             begin
                                 assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 1;
 
                                 assign ImmGenSig = 2'b01;
@@ -355,7 +379,7 @@ module control_unit(
                         `SWD_OP:
                             begin
                                 assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 1;
 
                                 assign ImmGenSig = 2'b01;
@@ -364,28 +388,28 @@ module control_unit(
                         `BNE_OP:
                             begin
                                 assign ALUOp = `FUNC_BNE;
-                                assign ALUSrcB = 2b'00;
+                                assign ALUSrcB = 2'b00;
                                 assign ALUSrcA = 1;
                             end
 
                         `BEQ_OP:
                             begin
                                 assign ALUOp = `FUNC_BEQ;
-                                assign ALUSrcB = 2b'00;
+                                assign ALUSrcB = 2'b00;
                                 assign ALUSrcA = 1;
                             end
 
                         `BGZ_OP:
                             begin
                                 assign ALUOp = `FUNC_BGZ;
-                                assign ALUSrcB = 2b'11;
+                                assign ALUSrcB = 2'b11;
                                 assign ALUSrcA = 1;
                             end
 
                         `BLZ_OP:
                             begin
                                 assign ALUOp = `FUNC_BLZ;
-                                assign ALUSrcB = 2b'11;
+                                assign ALUSrcB = 2'b11;
                                 assign ALUSrcA = 1;
                             end
 
@@ -394,7 +418,7 @@ module control_unit(
                                 assign PCWrite = 0;
 
                                 assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 0;
 
                                 assign ImmGenSig = 2'b10;
@@ -405,7 +429,7 @@ module control_unit(
                                 assign PCWrite = 0;
 
                                 assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2b'10;
+                                assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 0;
 
                                 assign ImmGenSig = 2'b10;
@@ -413,7 +437,7 @@ module control_unit(
                     endcase
                 end
 
-            `EX_2:
+            EX_2:
                 begin
                     assign PCWrite = 0;
                     assign WWDFlag = 0;
@@ -443,7 +467,7 @@ module control_unit(
                         end
                 end
 
-            `MEM_1:
+            MEM_1:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -478,7 +502,7 @@ module control_unit(
                         end
                 end
 
-            `MEM_2:
+            MEM_2:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -513,11 +537,11 @@ module control_unit(
                         end
                 end
 
-            `MEM_3:
+            MEM_3:
                 begin
                 end
 
-            `MEM_4:
+            MEM_4:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -542,7 +566,7 @@ module control_unit(
                     assign write_data = 0;
                 end
 
-            `WB:
+            WB:
                 begin
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -606,32 +630,32 @@ module control_unit(
 
 
         // update stage
-        if(stage == `IF_4 && opcode == `JMP_OP)
+        if(stage == IF_4 && opcode == `JMP_OP)
             begin
-                stage = `EX_1;
+                stage = EX_1;
             end
-        else if(stage == `EX_2 && (opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP || opcode == `BNE_OP))
+        else if(stage == EX_2 && (opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP || opcode == `BNE_OP))
             begin
-                stage = `IF_1;
+                stage = IF_1;
             end
-        else if(stage == `EX_2 && opcode == `ALU_OP || opcode == `ADI_OP || opcode == `ORI_OP || opcode == LHI || opcode == `JMP_OP || opcode == `JAL_OP) // see if it's all
+        else if(stage == EX_2 && (opcode == `ALU_OP || opcode == `ADI_OP || opcode == `ORI_OP || opcode == `LHI_OP || opcode == `JMP_OP || opcode == `JAL_OP)) // see if it's all
             begin
-                stage = `WB;
+                stage = WB;
             end
-        else if(stage == `MEM_4 && opcode == `SWD_OP)
+        else if(stage == MEM_4 && opcode == `SWD_OP)
             begin
-                stage = `IF_1;
+                stage = IF_1;
             end
         else
             begin
-                if(stage == `WB)
+                if(stage == WB)
                     begin
-                        stage = `IF_1;
+                        stage = IF_1;
                     end
                 else
                     begin
                         stage = stage + 1;
                     end
             end
-
+    end
 endmodule

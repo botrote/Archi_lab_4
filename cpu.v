@@ -98,7 +98,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	assign readM = MemRead;
 	assign writeM = MemWrite;
 	assign address = memory_address;
-	assign data = write_data ? : `WORD_SIZE'bz;
+	assign data = write_data ? data_1 : `WORD_SIZE'bz;
 
 	initial begin
 		pc = 16'h0000;
