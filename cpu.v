@@ -142,6 +142,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	always @(posedge ALURegWrite)
 		begin
 			ALUReg = ALU_result;
+			$display("ALU result: %d", ALU_result);
 		end
 
 	always @(posedge MDRWrite)
