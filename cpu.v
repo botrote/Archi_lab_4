@@ -59,8 +59,8 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	wire write_data;
 
 	// decode signals
-	wire decode_signal_reg;
-	wire decode_signal_inst;
+	//wire decode_signal_reg;
+	//wire decode_signal_inst;
 
 	// registers
 	reg [`WORD_SIZE - 1:0] ALUReg;
@@ -87,7 +87,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	// multiplexer ALU source B
 	wire [`WORD_SIZE - 1:0] used_imm;
 
-	control_unit control_unit1(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data, decode_signal_reg, decode_signal_inst);
+	control_unit control_unit1(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data);
 	Reg_Manager Registers(rs_input, rt_input, RegWrite, rd_index, reg_write_data, data_1, data_2);
 	immediate_generator immGen(immgen_input, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
 	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
@@ -122,6 +122,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 			num_inst = num_inst + 1;
 		end
 
+	/*
 	always @(posedge decode_signal_inst)
 		begin
 			$display("opcode: %d rs: %d rt: %d rd: %d func: %d imm: %d target: %d", opcode, rs, rt, rd, func, imm, target_address);
@@ -131,6 +132,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 		begin
 			$display("data @ rs1: %d, data @ rs2: %d", data_1, data_2);
 		end
+	*/
 
 	always @(posedge WWDFlag)
 		begin

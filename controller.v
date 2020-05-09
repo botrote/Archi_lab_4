@@ -26,10 +26,7 @@ module control_unit(
     ALURegWrite,
     MDRWrite,
 
-    write_data,
-
-    decode_signal_reg,
-    decode_signal_inst
+    write_data
 );
 
     input clk;
@@ -59,9 +56,6 @@ module control_unit(
 
     output write_data;
 
-    output decode_signal_reg;
-    output decode_signal_inst;
-
     reg PCWriteCond;
     reg PCWrite;
     reg IorD;
@@ -84,9 +78,6 @@ module control_unit(
     reg MDRWrite;
 
     reg write_data;
-
-    reg decode_signal_reg;
-    reg decode_signal_inst;
 
     reg [3:0] stage;
         parameter NON = -1;
@@ -120,8 +111,8 @@ module control_unit(
 
         assign write_data = 0;             // checked
 
-        assign decode_signal_reg = 0;
-        assign decode_signal_inst = 0;
+        //assign decode_signal_reg = 0;
+        //assign decode_signal_inst = 0;
 
         stage = NON;
     end
@@ -130,8 +121,6 @@ module control_unit(
         case(stage)
             IF_1: 
                 begin
-                    assign decode_signal_reg = 1;
-                    assign decode_signal_inst = 0;
 
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -156,7 +145,6 @@ module control_unit(
 
             IF_2:
                 begin
-                    assign decode_signal_reg = 0;
 
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
@@ -241,7 +229,7 @@ module control_unit(
                     assign ImmGenSig = 2'b00;
                     assign HLTFlag = 0;
                     assign ALURegWrite = 0;
-                    if(opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP || opcode == `BNE_OP)
+                    if(opcode == `BNE_OP || opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP)
                         begin
                             assign ALURegWrite = 1;
                         end
@@ -339,102 +327,105 @@ module control_unit(
                             endcase
                         end
 
-                    case(opcode)
-                        `ADI_OP:
-                            begin
-                                assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2'b10;
-                                assign ALUSrcA = 1;
+                    else
+                        begin
+                            case(opcode)
+                                `ADI_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_ADD;
+                                        assign ALUSrcB = 2'b10;
+                                        assign ALUSrcA = 1;
 
-                                assign ImmGenSig = 2'b01;
-                            end
+                                        assign ImmGenSig = 2'b01;
+                                    end
 
-                        `ORI_OP:
-                            begin
-                                assign ALUOp = `FUNC_ORR;
-                                assign ALUSrcB = 2'b10;
-                                assign ALUSrcA = 1;
+                                `ORI_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_ORR;
+                                        assign ALUSrcB = 2'b10;
+                                        assign ALUSrcA = 1;
 
-                                assign ImmGenSig = 2'b01;
-                            end
+                                        assign ImmGenSig = 2'b01;
+                                    end
 
-                        `LHI_OP:
-                            begin
-                                assign ALUOp = `FUNC_LHI;                  // not fin
-                                assign ALUSrcB = 2'b10;
-                                assign ALUSrcA = 1;
+                                `LHI_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_LHI;                  // not fin
+                                        assign ALUSrcB = 2'b10;
+                                        assign ALUSrcA = 1;
 
-                                assign ImmGenSig = 2'b01;
-                            end
+                                        assign ImmGenSig = 2'b01;
+                                end
 
-                        `LWD_OP:
-                            begin
-                                assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2'b10;
-                                assign ALUSrcA = 1;
+                                `LWD_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_ADD;
+                                        assign ALUSrcB = 2'b10;
+                                        assign ALUSrcA = 1;
 
-                                assign ImmGenSig = 2'b01;
-                            end
+                                        assign ImmGenSig = 2'b01;
+                                    end
 
-                        `SWD_OP:
-                            begin
-                                assign ALUOp = `FUNC_ADD;
-                                assign ALUSrcB = 2'b10;
-                                assign ALUSrcA = 1;
+                                `SWD_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_ADD;
+                                        assign ALUSrcB = 2'b10;
+                                        assign ALUSrcA = 1;
 
-                                assign ImmGenSig = 2'b01;
-                            end
+                                        assign ImmGenSig = 2'b01;
+                                    end
 
-                        `BNE_OP:
-                            begin
-                                assign ALUOp = `FUNC_BNE;
-                                assign ALUSrcB = 2'b00;
-                                assign ALUSrcA = 1;
-                            end
+                                `BNE_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_BNE;
+                                        assign ALUSrcB = 2'b00;
+                                        assign ALUSrcA = 1;
+                                    end
 
-                        `BEQ_OP:
-                            begin
-                                assign ALUOp = `FUNC_BEQ;
-                                assign ALUSrcB = 2'b00;
-                                assign ALUSrcA = 1;
-                            end
+                                `BEQ_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_BEQ;
+                                        assign ALUSrcB = 2'b00;
+                                        assign ALUSrcA = 1;
+                                    end
 
-                        `BGZ_OP:
-                            begin
-                                assign ALUOp = `FUNC_BGZ;
-                                assign ALUSrcB = 2'b11;
-                                assign ALUSrcA = 1;
-                            end
+                                `BGZ_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_BGZ;
+                                        assign ALUSrcB = 2'b11;
+                                        assign ALUSrcA = 1;
+                                    end
 
-                        `BLZ_OP:
-                            begin
-                                assign ALUOp = `FUNC_BLZ;
-                                assign ALUSrcB = 2'b11;
-                                assign ALUSrcA = 1;
-                            end
+                                `BLZ_OP:
+                                    begin
+                                        assign ALUOp = `FUNC_BLZ;
+                                        assign ALUSrcB = 2'b11;
+                                        assign ALUSrcA = 1;
+                                    end
 
-                        `JMP_OP:
-                            begin
-                                assign PCWrite = 0;
+                                `JMP_OP:
+                                    begin
+                                        assign PCWrite = 0;
 
-                                assign ALUOp = `FUNC_JMP; // needs change
-                                assign ALUSrcB = 2'b10;
-                                assign ALUSrcA = 0;
+                                        assign ALUOp = `FUNC_JMP; // needs change
+                                        assign ALUSrcB = 2'b10;
+                                        assign ALUSrcA = 0;
 
-                                assign ImmGenSig = 2'b10;
-                            end
+                                        assign ImmGenSig = 2'b10;
+                                    end
 
-                        `JAL_OP:
-                            begin
-                                assign PCWrite = 0;
+                                `JAL_OP:
+                                    begin
+                                        assign PCWrite = 0;
 
-                                assign ALUOp = `FUNC_JMP; // needs change
-                                assign ALUSrcB = 2'b10;
-                                assign ALUSrcA = 0;
+                                        assign ALUOp = `FUNC_JMP; // needs change
+                                        assign ALUSrcB = 2'b10;
+                                        assign ALUSrcA = 0;
 
-                                assign ImmGenSig = 2'b10;
-                            end
-                    endcase
+                                        assign ImmGenSig = 2'b10;
+                                    end
+                            endcase
+                        end
                 end
 
             EX_2:
@@ -551,7 +542,7 @@ module control_unit(
 
             WB:
                 begin
-                    assign decode_signal_inst = 1;
+                    //assign decode_signal_inst = 1;
 
                     assign PCWriteCond = 0;
                     assign PCWrite = 0;
