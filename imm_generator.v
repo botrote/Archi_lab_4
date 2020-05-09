@@ -1,45 +1,52 @@
 `include "opcodes.v"
 
 module immediate_generator(
-    imm,
-    target_address,
+    data,
 
     sign_extended_target,
     sign_extended_8_imm, 
     zero_extended_8_imm
 );
 
-    input [7:0] imm;
-    input [11:0] target_address;
+    input [`WORD_SIZE - 1:0] data;
 
-    output reg [`WORD_SIZE - 1 : 0] sign_extended_target, sign_extended_8_imm, zero_extended_8_imm;
+    output [`WORD_SIZE - 1 : 0] sign_extended_target, sign_extended_8_imm, zero_extended_8_imm;
 
     integer i;
-
-    always @(*)
+    function [`WORD_SIZE-1:0]ARSN;
+        input [`WORD_SIZE-1:0]A;
+        input [`WORD_SIZE-1:0]B;
         begin
-            // sign extend target address
-            sign_extended_target = (target_address | 16'h0000) << 8;
-            for(i = 0; i < 8; i = i + 1)
-                begin
-                    if(sign_extended_target[15] == 1)
-                        sign_extended_target = (sign_extended_target >> 1) + 16'h8000;
-                    else
-                        sign_extended_target = sign_extended_target >> 1; 
-                end
-    
-            // sign extend imm
-            sign_extended_8_imm = (imm | 16'h0000) << 8;
-            for(i = 0; i < 8; i = i + 1)
-                begin
-                    if(sign_extended_8_imm[15] == 1)
-                        sign_extended_8_imm = (sign_extended_8_imm >> 1) + 16'h8000;
-                    else
-                        sign_extended_8_imm = sign_extended_8_imm>> 1; 
-                end
-
-            // zero extend imm
-            zero_extended_8_imm = imm | 16'h0000;
+            for(i = 0; i < B; i = i + 1) begin
+                if(A[`WORD_SIZE-1]==1)
+                    A = ((A>>1)+16'h8000);
+                else
+                    A = (A>>1);
+            end
+            ARSN = A;
         end
+    endfunction
+
+    function [`WORD_SIZE-1:0]LRSN;
+        input [`WORD_SIZE-1:0]A;
+        input [`WORD_SIZE-1:0]B;
+        begin
+            A=(A>>B);
+            LRSN = A;
+        end
+    endfunction
+
+    function [`WORD_SIZE-1:0]LLSN;
+        input [`WORD_SIZE-1:0]A;
+        input [`WORD_SIZE-1:0]B;
+        begin
+            A = (A<<B);
+            LLSN = A;
+        end
+    endfunction
+
+    assign sign_extended_8_imm = ARSN(LLSN(data, 8), 8);
+    assign zero_extended_8_imm = LRSN(LLSN(data, 8), 8);
+    assign sign_extended_target = ARSN(LLSN(data, 4), 4);
 
 endmodule

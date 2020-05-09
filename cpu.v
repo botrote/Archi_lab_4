@@ -69,10 +69,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	assign rt_input = rt;
 
 	// immediate generator
-	wire [7:0] imm_wire;
-	wire [11:0] target_address_wire;
-	assign imm_wire = imm;
-	assign target_address_wire = target_address;
+	reg [`WORD_SIZE] immgen_input;
 	wire [`WORD_SIZE - 1:0] zero_extended_8_imm, sign_extended_8_imm, sign_extended_target;
 
 	// ALU
@@ -88,7 +85,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	control_unit control_unit1(clk, opcode, func, PCWriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite, PCSource, ALUOp, ALUSrcB, ALUSrcA, RegWrite, RegDst, InstFlag, ImmGenSig, HLTFlag, WWDFlag, ALURegWrite, MDRWrite, write_data);
 	Reg_Manager Registers(rs_input, rt_input, RegWrite, rd_index, reg_write_data, data_1, data_2);
-	immediate_generator immGen(imm_wire, target_address_wire, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
+	immediate_generator immGen(immgen_input, zero_extended_8_imm, sign_extended_8_imm, sign_extended_target);
 	alu ALU(ALUOp, ALU_input_1, ALU_input_2, ALU_result, bcond);
 	MUX2_1 PCSource_MUX(ALU_result, ALUReg, PCSource, newPC); // fin
 	MUX2_1 IorD_MUX(pc, ALUReg, IorD, memory_address); // fin
@@ -137,8 +134,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 			rt = data[9:8];
 			rd = data[7:6];
 			func = data[5:0];
-			imm = data[7:0];
-			target_address = data[11:0];
+			immgen_input = data;
 
 			$display("opcode: %d rs: %d rt: %d rd: %d func: %d imm: %d target: %d", opcode, rs, rt, rd, func, imm, target_address);
 		end
