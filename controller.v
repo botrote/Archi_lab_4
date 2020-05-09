@@ -417,7 +417,7 @@ module control_unit(
                             begin
                                 assign PCWrite = 0;
 
-                                assign ALUOp = `FUNC_ADD; // needs change
+                                assign ALUOp = `FUNC_JMP; // needs change
                                 assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 0;
 
@@ -428,7 +428,7 @@ module control_unit(
                             begin
                                 assign PCWrite = 0;
 
-                                assign ALUOp = `FUNC_ADD; // needs change
+                                assign ALUOp = `FUNC_JMP; // needs change
                                 assign ALUSrcB = 2'b10;
                                 assign ALUSrcA = 0;
 

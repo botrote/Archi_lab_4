@@ -33,6 +33,7 @@
 
 // more additional function codes for ALU
 `define FUNC_LHI    4'b1100
+`define FUNC_JMP    4'b1101
 
 // ALU instruction function codes
 `define INST_FUNC_ADD 6'd0

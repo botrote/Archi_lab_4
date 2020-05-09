@@ -24,7 +24,7 @@ module alu(
         bResult = 0;
     end
 
-    always @(*) begin
+    always @(funcCode) begin
 
         case(funcCode) 
         `FUNC_ADD : 
@@ -94,6 +94,12 @@ module alu(
                 assign aResult = op2 << 8;
                 //$display("%d << 8 = %d", op2, aResult);
             end
+
+        `FUNC_JMP:
+            begin
+                assign aResult = (op1 & 16'hf000) | op2;
+            end
+
         endcase
     end
 
