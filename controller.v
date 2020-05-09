@@ -1,6 +1,5 @@
 `include "opcodes.v"
 
-
 module control_unit(
     clk,
     opcode,

@@ -114,6 +114,8 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	assign pcChangeCond = PCWrite || (PCWriteCond && bcond);
 	always @(posedge pcChangeCond)
 		begin
+			$display("original PC: %d, new PC: %d", pc, newPC);
+
 			pc = newPC;
 		end
 
@@ -153,6 +155,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 			$display("New instruction start");
 			$display("opcode: %d, rs: %d rt: %d, rd: %d, func: %d", opcode, rs, rt, rd, func);
+			$display("imm: %d, target: %d", data[7:0], data[11:0]);
 		end
 
 	always @(posedge ALURegWrite)

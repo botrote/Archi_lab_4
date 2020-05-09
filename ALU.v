@@ -79,12 +79,12 @@ module alu(
             end
         `FUNC_BGZ : 
             begin
-                assign bResult = ((op1 > 0) ? 1 : 0);
+                assign bResult = ((op1 > op1) ? 1 : 0);
                 $display("%d => %d", op1, bResult);
             end
         `FUNC_BLZ : 
             begin
-                assign bResult = ((op1 < 0) ? 1 : 0);
+                assign bResult = ((op1 < op2) ? 1 : 0);
                 $display("%d => %d", op1, bResult);
             end
 
