@@ -150,6 +150,9 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 			rd = data[7:6];
 			func = data[5:0];
 			immgen_input = data;
+
+			$display("New instruction start");
+			$display("opcode: %d, rs: %d rt: %d, rd: %d, func: %d", opcode, rs, rt, rd, func);
 		end
 
 	always @(posedge ALURegWrite)

@@ -597,6 +597,9 @@ module control_unit(
                                     assign RegDst = 2'b10;
                                 end
                         end
+
+                    $display("");
+                    $display("");
                 end
         endcase
 
