@@ -30,7 +30,7 @@ module alu(
         `FUNC_ADD : 
 		begin
 			assign aResult = op1 + op2;
-			$display("%d + %d = %d", op1, op2, aResult);
+			//$display("%d + %d = %d", op1, op2, aResult);
 		end
         `FUNC_SUB : 
 		begin
