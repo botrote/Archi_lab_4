@@ -24,9 +24,9 @@ module Reg_Manager(r1Idx, r2Idx, writeM, writeIdx, writeData, r1Data, r2Data);
         registers[3] = 0;
     end
 
-    always @(posedge writeM) begin
-        registers[writeIdx] = writeData;
-
+    always @(writeM) begin
+        if(writeM == 1)
+            registers[writeIdx] = writeData;
 
         //$display("Register Content");
         //$display("Register 0:      %d", registers[0]);

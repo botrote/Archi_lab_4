@@ -111,18 +111,19 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 		num_inst = -1;
 	end
 
-	always @(posedge InstFlag)
+	always @(InstFlag)
 		begin
-			num_inst = num_inst + 1;
+			if(InstFlag == 1)
+				num_inst = num_inst + 1;
 		end
 
 	wire pcChangeCond;
 	assign pcChangeCond = PCWrite || (PCWriteCond && bcond);
-	always @(posedge pcChangeCond)
+	always @(pcChangeCond)
 		begin
 			//$display("original PC: %d, new PC: %d", pc, newPC);
-
-			pc = newPC;
+			if(pcChangeCond == 1)
+				pc = newPC;
 		end
 
 	/*
@@ -146,15 +147,18 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 
 	assign is_halted = HLTFlag;
 	
-	always @(posedge IRWrite)
+	always @(IRWrite)
 		begin
-			opcode = data[15:12];
-			rs = data[11:10];
-			rt = data[9:8];
-			rd = data[7:6];
-			func = data[5:0];
-			imm = data[7:0];
-			target_address = data[11:0];
+			if(IRWrite == 1)
+				begin
+					opcode = data[15:12];
+					rs = data[11:10];
+					rt = data[9:8];
+					rd = data[7:6];
+					func = data[5:0];
+					imm = data[7:0];
+					target_address = data[11:0];
+				end
 			//immgen_input = data;
 
 			//$display("New instruction start");
@@ -162,15 +166,16 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 			//$display("imm: %d, target: %d", data[7:0], data[11:0]);
 		end
 
-	always @(posedge ALURegWrite)
+	always @(ALURegWrite)
 		begin
-			ALUReg = ALU_result;
-
+			if(ALURegWrite == 1)
+				ALUReg = ALU_result;
 		end
 
-	always @(posedge MDRWrite)
+	always @(MDRWrite)
 		begin
-			MDR = data;
+			if(MDRWrite == 1)
+				MDR = data;
 		end
 
 endmodule
