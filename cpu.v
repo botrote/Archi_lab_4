@@ -114,7 +114,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	assign pcChangeCond = PCWrite || (PCWriteCond && bcond);
 	always @(posedge pcChangeCond)
 		begin
-			$display("original PC: %d, new PC: %d", pc, newPC);
+			//$display("original PC: %d, new PC: %d", pc, newPC);
 
 			pc = newPC;
 		end

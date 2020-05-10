@@ -433,7 +433,7 @@ module control_unit(
                     assign PCWrite = 0;
                     assign WWDFlag = 0;
 
-                    if(opcode == `ALU_OP || opcode == `ADI_OP || opcode == `LHI_OP || opcode == `ORI_OP || opcode == `LWD_OP || opcode == `SWD_OP)
+                    if(opcode == `ALU_OP || opcode == `ADI_OP || opcode == `ORI_OP || opcode == `LHI_OP || opcode == `LWD_OP || opcode == `SWD_OP)
                         begin
                             if(opcode == `ALU_OP && (func == `INST_FUNC_JPR || func == `INST_FUNC_JRL))
                                 begin
@@ -446,7 +446,7 @@ module control_unit(
                                     assign ALURegWrite = 1;
                                 end
                         end
-                    else if(opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BNE_OP || opcode == `BLZ_OP)
+                    else if(opcode ==`BNE_OP || opcode == `BEQ_OP || opcode == `BGZ_OP || opcode == `BLZ_OP)
                         begin
                             assign PCSource = 1;
                             assign PCWriteCond = 1;
@@ -562,7 +562,7 @@ module control_unit(
 
                     assign write_data = 0;
 
-                    if (opcode==`BNE_OP || opcode==`BEQ_OP || opcode==`BGZ_OP || opcode==`BLZ_OP|| opcode==`JMP_OP || opcode == `SWD_OP)
+                    if (opcode == `SWD_OP || opcode==`BNE_OP || opcode==`BEQ_OP || opcode==`BGZ_OP || opcode==`BLZ_OP|| opcode==`JMP_OP)
                         begin
                         end
                     else if(opcode==`ADI_OP || opcode==`ORI_OP || opcode==`LHI_OP)
@@ -570,16 +570,16 @@ module control_unit(
                             assign RegWrite = 1;
                             assign RegDst = 2'b01;
                         end
-                    else if(opcode == `JAL_OP)
-                        begin
-                            assign RegWrite = 1;
-                            assign RegDst = 2'b11;
-                        end
                     else if(opcode == `LWD_OP)
                         begin
                             assign MemtoReg = 1;
                             assign RegWrite = 1;
                             assign RegDst = 2'b01;
+                        end
+                    else if(opcode == `JAL_OP)
+                        begin
+                            assign RegWrite = 1;
+                            assign RegDst = 2'b11;
                         end
                     else
                         begin
@@ -598,8 +598,8 @@ module control_unit(
                                 end
                         end
 
-                    $display("");
-                    $display("");
+                    //$display("");
+                    //$display("");
                 end
         endcase
 
