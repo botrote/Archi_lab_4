@@ -137,9 +137,10 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 		end
 	*/
 
-	always @(posedge WWDFlag)
+	always @(WWDFlag)
 		begin
-			output_port = data_1;
+			if(WWDFlag == 1)
+				output_port = data_1;
 			//$display("output_port %d", output_port);
 		end
 
