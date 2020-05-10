@@ -12,7 +12,7 @@ module Reg_Manager(r1Idx, r2Idx, writeM, writeIdx, writeData, r1Data, r2Data);
     output [`WORD_SIZE - 1 : 0] r1Data;
     output [`WORD_SIZE - 1 : 0] r2Data;
 
-    reg [`WORD_SIZE - 1 : 0] registers [3 : 0];
+    reg [`WORD_SIZE - 1 : 0] registers [`NUM_REGS - 1:0];
 
     assign r1Data = registers[r1Idx];
     assign r2Data = registers[r2Idx];
