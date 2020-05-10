@@ -28,11 +28,11 @@ module Reg_Manager(r1Idx, r2Idx, writeM, writeIdx, writeData, r1Data, r2Data);
         registers[writeIdx] = writeData;
 
 
-        $display("Register Content");
-        $display("Register 0:      %d", registers[0]);
-        $display("Register 1:      %d", registers[1]);
-        $display("Register 2:      %d", registers[2]);
-        $display("Register 3:      %d", registers[3]);
+        //$display("Register Content");
+        //$display("Register 0:      %d", registers[0]);
+        //$display("Register 1:      %d", registers[1]);
+        //$display("Register 2:      %d", registers[2]);
+        //$display("Register 3:      %d", registers[3]);
     end
 
 endmodule

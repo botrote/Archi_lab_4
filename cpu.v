@@ -140,7 +140,7 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 	always @(posedge WWDFlag)
 		begin
 			output_port = data_1;
-			$display("output_port %d", output_port);
+			//$display("output_port %d", output_port);
 		end
 
 	assign is_halted = HLTFlag;
@@ -156,9 +156,9 @@ module cpu(clk, reset_n, readM, writeM, address, data, num_inst, output_port, is
 			target_address = data[11:0];
 			//immgen_input = data;
 
-			$display("New instruction start");
-			$display("opcode: %d, rs: %d rt: %d, rd: %d, func: %d", opcode, rs, rt, rd, func);
-			$display("imm: %d, target: %d", data[7:0], data[11:0]);
+			//$display("New instruction start");
+			//$display("opcode: %d, rs: %d rt: %d, rd: %d, func: %d", opcode, rs, rt, rd, func);
+			//$display("imm: %d, target: %d", data[7:0], data[11:0]);
 		end
 
 	always @(posedge ALURegWrite)
