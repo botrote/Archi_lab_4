@@ -98,7 +98,7 @@ module control_unit(
         assign PCSource = 0;        // checked
         assign ALUOp = 0;           // checked
         assign ALUSrcB = 2'b00;     // checked
-        assign ALUSrcA = 0;         // checked
+        assign ALUSrcA = 1;         // checked
         assign RegWrite = 0;        // checked
 
         assign RegDst = 2'b00;      // checked
@@ -132,7 +132,7 @@ module control_unit(
                     assign PCSource = 0;
                     assign ALUOp = `FUNC_ADD;
                     assign ALUSrcB = 2'b01;
-                    assign ALUSrcA = 0;          
+                    assign ALUSrcA = 1;          
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -156,7 +156,7 @@ module control_unit(
                     assign PCSource = 0;
                     assign ALUOp = `FUNC_ADD;
                     assign ALUSrcB = 2'b01;
-                    assign ALUSrcA = 0;
+                    assign ALUSrcA = 1;
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -179,7 +179,7 @@ module control_unit(
                     assign PCSource = 0;
                     assign ALUOp = `FUNC_ADD;   
                     assign ALUSrcB = 2'b01; 
-                    assign ALUSrcA = 0;
+                    assign ALUSrcA = 1;
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -201,7 +201,7 @@ module control_unit(
                     assign PCSource = 1;
                     assign ALUOp = `FUNC_ADD;
                     assign ALUSrcB = 2'b10;
-                    assign ALUSrcA = 0;
+                    assign ALUSrcA = 1;
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -222,7 +222,7 @@ module control_unit(
                     assign IRWrite = 0;
                     assign PCSource = 1;
                     assign ALUSrcB = 2'b10;
-                    assign ALUSrcA = 0;
+                    assign ALUSrcA = 1;
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -256,7 +256,7 @@ module control_unit(
                     if(opcode == `ALU_OP) 
                         begin
                             assign ALUSrcB = 2'b00;
-                            assign ALUSrcA = 1;
+                            assign ALUSrcA = 0;
 
                             case(func)
                                 `INST_FUNC_ADD: 
@@ -305,14 +305,14 @@ module control_unit(
                                     begin
                                         assign ALUOp = `FUNC_ADD;
                                         assign ALUSrcB = 2'b11;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
                                     end
 
                                 `INST_FUNC_JRL:
                                     begin
                                         assign ALUOp = `FUNC_ADD;
                                         assign ALUSrcB = 2'b11;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
                                     end
 
                                 `INST_FUNC_WWD:
@@ -334,7 +334,7 @@ module control_unit(
                                     begin
                                         assign ALUOp = `FUNC_ADD;
                                         assign ALUSrcB = 2'b10;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
 
                                         assign ImmGenSig = 2'b01;
                                     end
@@ -343,7 +343,7 @@ module control_unit(
                                     begin
                                         assign ALUOp = `FUNC_ORR;
                                         assign ALUSrcB = 2'b10;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
 
                                         assign ImmGenSig = 2'b01;
                                     end
@@ -352,7 +352,7 @@ module control_unit(
                                     begin
                                         assign ALUOp = `FUNC_LHI;                  // not fin
                                         assign ALUSrcB = 2'b10;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
 
                                         assign ImmGenSig = 2'b01;
                                 end
@@ -361,7 +361,7 @@ module control_unit(
                                     begin
                                         assign ALUOp = `FUNC_ADD;
                                         assign ALUSrcB = 2'b10;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
 
                                         assign ImmGenSig = 2'b01;
                                     end
@@ -370,7 +370,7 @@ module control_unit(
                                     begin
                                         assign ALUOp = `FUNC_ADD;
                                         assign ALUSrcB = 2'b10;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
 
                                         assign ImmGenSig = 2'b01;
                                     end
@@ -379,28 +379,28 @@ module control_unit(
                                     begin
                                         assign ALUOp = `FUNC_BNE;
                                         assign ALUSrcB = 2'b00;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
                                     end
 
                                 `BEQ_OP:
                                     begin
                                         assign ALUOp = `FUNC_BEQ;
                                         assign ALUSrcB = 2'b00;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
                                     end
 
                                 `BGZ_OP:
                                     begin
                                         assign ALUOp = `FUNC_BGZ;
                                         assign ALUSrcB = 2'b11;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
                                     end
 
                                 `BLZ_OP:
                                     begin
                                         assign ALUOp = `FUNC_BLZ;
                                         assign ALUSrcB = 2'b11;
-                                        assign ALUSrcA = 1;
+                                        assign ALUSrcA = 0;
                                     end
 
                                 `JMP_OP:
@@ -409,7 +409,7 @@ module control_unit(
 
                                         assign ALUOp = `FUNC_JMP; // needs change
                                         assign ALUSrcB = 2'b10;
-                                        assign ALUSrcA = 0;
+                                        assign ALUSrcA = 1;
 
                                         assign ImmGenSig = 2'b10;
                                     end
@@ -420,7 +420,7 @@ module control_unit(
 
                                         assign ALUOp = `FUNC_JMP; // needs change
                                         assign ALUSrcB = 2'b10;
-                                        assign ALUSrcA = 0;
+                                        assign ALUSrcA = 1;
 
                                         assign ImmGenSig = 2'b10;
                                     end
@@ -469,7 +469,7 @@ module control_unit(
                     assign PCSource = 0;
                     assign ALUOp = 0;
                     assign ALUSrcB = 2'b00;
-                    assign ALUSrcA = 0;
+                    assign ALUSrcA = 1;
                     assign RegWrite = 0;
 
                     assign RegDst = 2'b00;
@@ -498,7 +498,7 @@ module control_unit(
                     assign PCSource = 0;
                     assign ALUOp = 0;
                     assign ALUSrcB = 2'b00;
-                    assign ALUSrcA = 0;
+                    assign ALUSrcA = 1;
                     assign RegWrite = 0;
 
                     assign ImmGenSig = 2'b00;
@@ -530,7 +530,7 @@ module control_unit(
                     assign PCSource = 0;
                     assign ALUOp = 0;                        // not fin
                     assign ALUSrcB = 2'b00;                      // not fin
-                    assign ALUSrcA = 0;
+                    assign ALUSrcA = 1;
                     assign RegWrite = 0;
 
                     assign ImmGenSig = 2'b00;
@@ -554,7 +554,7 @@ module control_unit(
                     assign PCSource = 0;
                     assign ALUOp = 0;                        // not fin
                     assign ALUSrcB = 2'b00;                      // not fin
-                    assign ALUSrcA = 0;                      // not fin
+                    assign ALUSrcA = 1;                      // not fin
                     assign RegWrite = 0;
 
                     assign ImmGenSig = 2'b00;
